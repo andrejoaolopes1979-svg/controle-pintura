@@ -1,0 +1,663 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+  <meta name="theme-color" content="#14171c">
+  <meta name="mobile-web-app-capable" content="yes">
+  <meta name="apple-mobile-web-app-capable" content="yes">
+  <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+  <meta name="apple-mobile-web-app-title" content="Pintura">
+  <link rel="manifest" href="manifest.webmanifest">
+  <link rel="apple-touch-icon" href="icon-192.png">
+  <link rel="icon" type="image/png" href="icon-192.png">
+  <title>Controle de Pintura</title>
+  <link rel="stylesheet" href="css/style.css">
+</head>
+<body>
+  <div class="app">
+
+    <header class="app-header">
+      <div class="app-brand">
+        <span class="app-logo">
+          <svg viewBox="0 0 100 100" fill="none" stroke="currentColor" stroke-width="3.2" stroke-linecap="round" stroke-linejoin="round">
+            <g transform="translate(-6,0)">
+              <path d="M28 32h32l10 10v22a8 8 0 0 1-8 8H28a8 8 0 0 1-8-8V40a8 8 0 0 1 8-8Z"/>
+              <path d="M60 32V20h10v12"/>
+              <path d="M34 46h18"/>
+              <path d="M28 58h34"/>
+              <path d="M60 58h8"/>
+              <path d="M80 54l14-6v20l-14-6Z"/>
+              <circle cx="85" cy="48" r="2.5"/>
+              <circle cx="85" cy="68" r="2.5"/>
+            </g>
+          </svg>
+        </span>
+        <div class="brand-copy">
+          <span class="brand-kicker">Operação</span>
+          <h1>Pintura</h1>
+          <span class="header-sub" id="header-sub">Painel de produção</span>
+        </div>
+      </div>
+
+      </header>
+
+    <main class="app-main">
+
+      <!-- ====== DASHBOARD ====== -->
+      <section id="view-dashboard" class="view active">
+
+        <div id="alert-banner" class="alert-banner hidden" onclick="goPrimer()">
+          <span class="alert-dot"></span>
+          <span id="alert-text">Peças disponíveis para retirada</span>
+          <span class="alert-arrow">›</span>
+        </div>
+
+        <div class="dashboard-hero">
+          <div class="hero-copy">
+            <span class="eyebrow">Operação do dia</span>
+            <h2>Resultado geral</h2>
+          </div>
+        </div>
+
+        <div class="dash-summary">
+          <div class="kpi-pillar">
+            <span class="kpi-label">Resultado do dia</span>
+            <strong id="kpi-result">0 peças</strong>
+          </div>
+        </div>
+
+        <div class="mini-kpis">
+          <div class="mini-kpi">
+            <span class="mini-label">Programação</span>
+            <strong id="mini-total">0</strong>
+          </div>
+          <div class="mini-kpi accent">
+            <span class="mini-label">Recebidas</span>
+            <strong id="mini-recebidas">0</strong>
+          </div>
+          <div class="mini-kpi ok">
+            <span class="mini-label">Finalizadas</span>
+            <strong id="mini-finalizadas">0</strong>
+          </div>
+        </div>
+
+        <div class="dashboard-panels">
+          <div class="panel-card">
+            <div class="panel-header">
+              <span>Produção do dia</span>
+              <strong id="panel-completion">0%</strong>
+            </div>
+            <div class="progress-track wide">
+              <div class="progress-fill" id="panel-progress"></div>
+            </div>
+            <div class="panel-metrics">
+              <div>
+                <span>Finalizadas</span>
+                <strong id="panel-finalizadas">0</strong>
+              </div>
+              <div>
+                <span>Em pintura</span>
+                <strong id="panel-em-pintura">0</strong>
+              </div>
+              <div>
+                <span>Pendentes</span>
+                <strong id="panel-pendentes">0</strong>
+              </div>
+            </div>
+          </div>
+
+          <div class="panel-card alt">
+            <div class="panel-header">
+              <span>Foco de hoje</span>
+              <strong id="panel-focus">0</strong>
+            </div>
+            <ul class="focus-list">
+              <li><span>Recebidas</span><b id="focus-recebidas">0</b></li>
+              <li><span>Em pintura</span><b id="focus-pintura">0</b></li>
+              <li><span>Concluídas</span><b id="focus-finalizadas">0</b></li>
+            </ul>
+          </div>
+        </div>
+
+        <div class="status-strip">
+          <div class="status-pill neutral">
+            <span>Produção</span>
+            <strong id="status-prod">0%</strong>
+          </div>
+          <div class="status-pill warning">
+            <span>Recebidas</span>
+            <strong id="status-recebidas">0</strong>
+          </div>
+          <div class="status-pill success">
+            <span>Concluídas</span>
+            <strong id="status-finalizadas">0</strong>
+          </div>
+        </div>
+
+        <div class="performance-grid">
+          <div class="score-card">
+            <div class="score-card-header">
+              <span>Top peças</span>
+              <strong>Dia</strong>
+            </div>
+            <div id="rank-parts-list" class="leader-list"></div>
+          </div>
+
+          <div class="score-card alt">
+            <div class="score-card-header">
+              <span>Cores em foco</span>
+              <strong>Hoje</strong>
+            </div>
+            <div id="rank-colors-list" class="leader-list"></div>
+          </div>
+        </div>
+
+        <div class="insight-panel">
+          <div class="insight-header">
+            <span>Diagnóstico do dia</span>
+            <strong id="insight-status">Em execução</strong>
+          </div>
+          <div class="insight-grid">
+            <div class="insight-box">
+              <span>Meta</span>
+              <strong id="insight-meta">0%</strong>
+            </div>
+            <div class="insight-box">
+              <span>Pendentes</span>
+              <strong id="insight-pendentes">0</strong>
+            </div>
+            <div class="insight-box">
+              <span>Top peça</span>
+              <strong id="insight-part">—</strong>
+            </div>
+            <div class="insight-box">
+              <span>Top cor</span>
+              <strong id="insight-color">—</strong>
+            </div>
+          </div>
+        </div>
+
+        <div class="compare-panel">
+          <div class="compare-header">
+            <span>Comparativo</span>
+            <strong>Últimos 7 dias</strong>
+          </div>
+          <div class="compare-grid">
+            <div class="compare-box">
+              <span>Hoje</span>
+              <strong id="compare-today">0</strong>
+            </div>
+            <div class="compare-box">
+              <span>Ontem</span>
+              <strong id="compare-yesterday">0</strong>
+            </div>
+            <div class="compare-box">
+              <span>Semana</span>
+              <strong id="compare-week">0</strong>
+            </div>
+            <div class="compare-box accent">
+              <span>Variação</span>
+              <strong id="compare-delta">0%</strong>
+            </div>
+          </div>
+        </div>
+
+        <div class="trend-panel">
+          <div class="trend-header">
+            <span>Tendência</span>
+            <strong>Últimos 7 dias</strong>
+          </div>
+          <div id="trend-bars" class="trend-bars"></div>
+        </div>
+
+        <div class="focus-panel">
+          <div class="focus-header">
+            <span>Operação em foco</span>
+            <strong id="focus-action">Ajustar</strong>
+          </div>
+          <div class="focus-grid">
+            <div class="focus-box">
+              <span>Meta</span>
+              <strong id="focus-meta">0%</strong>
+            </div>
+            <div class="focus-box">
+              <span>Atraso</span>
+              <strong id="focus-atraso">0</strong>
+            </div>
+            <div class="focus-box">
+              <span>Retorno</span>
+              <strong id="focus-retorno">0</strong>
+            </div>
+            <div class="focus-box accent">
+              <span>Ação</span>
+              <strong id="focus-cmd">Acelerar</strong>
+            </div>
+          </div>
+        </div>
+
+        <div class="retorno-card" onclick="goRetorno()">
+          <div class="retorno-card-head">
+            <div>
+              <span class="stat-value accent2" id="stat-retorno">0</span>
+              <span class="stat-label" id="stat-retorno-label">Retornos hoje</span>
+            </div>
+            <span class="retorno-note">Peças que voltaram à pintura · não contam como produção</span>
+            <span class="seg-arrow">›</span>
+          </div>
+          <div id="retorno-top" class="retorno-top hidden"></div>
+        </div>
+      </section>
+
+      <!-- ====== SEGMENTO (lista de peças do card) ====== -->
+      <section id="view-segmento" class="view">
+        <button class="back-btn" onclick="goDashboard()">← Voltar</button>
+        <div class="tab-head">
+          <h2 id="seg-title">—</h2>
+          <p id="seg-sub">—</p>
+        </div>
+        <div class="search-bar">
+          <input type="search" id="seg-search-input" placeholder="Buscar por PN ou nome...">
+        </div>
+        <div id="seg-list" class="pecas-list"></div>
+        <div id="seg-empty" class="empty-state hidden">
+          <p>Nenhuma peça neste segmento.</p>
+        </div>
+      </section>
+
+      <!-- ====== LOGÍSTICA ====== -->
+      <section id="view-logistica" class="view">
+        <div class="tab-head">
+          <h2>Logística</h2>
+          <p>Registre as peças liberadas e acompanhe as que faltam.</p>
+        </div>
+        <div class="whats-export">
+          <button class="whats-btn" onclick="openExportPicker('logistica')" aria-label="Exportar para WhatsApp">
+            <svg viewBox="0 0 24 24" fill="currentColor"><path d="M17.472 14.382c-.297-.149-1.758-.867-2.03-.967-.273-.099-.471-.148-.67.15-.197.297-.767.966-.94 1.164-.173.199-.347.223-.644.075-.297-.15-1.255-.463-2.39-1.475-.883-.788-1.48-1.761-1.653-2.059-.173-.297-.018-.458.13-.606.134-.133.298-.347.446-.52.149-.174.198-.298.298-.497.099-.198.05-.371-.025-.52-.075-.149-.669-1.612-.916-2.207-.242-.579-.487-.5-.669-.51-.173-.008-.371-.01-.57-.01-.198 0-.52.074-.792.372-.272.297-1.04 1.016-1.04 2.479 0 1.462 1.065 2.875 1.213 3.074.149.198 2.096 3.2 5.077 4.487.709.306 1.262.489 1.694.625.712.227 1.36.195 1.871.118.571-.085 1.758-.719 2.006-1.413.248-.694.248-1.289.173-1.413-.074-.124-.272-.198-.57-.347m-5.421 7.403h-.004a9.87 9.87 0 01-5.031-1.378l-.361-.214-3.741.982.998-3.648-.235-.374a9.86 9.86 0 01-1.51-5.26c.001-5.45 4.436-9.884 9.888-9.884 2.64 0 5.122 1.03 6.988 2.898a9.825 9.825 0 012.893 6.994c-.003 5.45-4.437 9.884-9.885 9.884m8.413-18.297A11.815 11.815 0 0012.05 0C5.495 0 .16 5.335.157 11.892c0 2.096.547 4.142 1.588 5.945L.057 24l6.305-1.654a11.882 11.882 0 005.683 1.448h.005c6.554 0 11.89-5.335 11.893-11.893a11.821 11.821 0 00-3.48-8.413z"/></svg>
+          </button>
+        </div>
+        <div id="log-list" class="pecas-list"></div>
+        <div id="log-empty" class="empty-state hidden">
+          <p>Nenhuma peça na etapa de Logística.</p>
+          <p class="empty-hint">Peças lançadas na meta aparecem aqui após avançarem de etapa.</p>
+        </div>
+      </section>
+
+      <!-- ====== PINTURA ====== -->
+      <section id="view-primer" class="view">
+        <div class="tab-head">
+          <h2>Pintura</h2>
+          <p>Registre as peças pintadas e acompanhe as que faltam.</p>
+        </div>
+        <div class="whats-export">
+          <button class="whats-btn" onclick="openExportPicker('primer')" aria-label="Exportar para WhatsApp">
+            <svg viewBox="0 0 24 24" fill="currentColor"><path d="M17.472 14.382c-.297-.149-1.758-.867-2.03-.967-.273-.099-.471-.148-.67.15-.197.297-.767.966-.94 1.164-.173.199-.347.223-.644.075-.297-.15-1.255-.463-2.39-1.475-.883-.788-1.48-1.761-1.653-2.059-.173-.297-.018-.458.13-.606.134-.133.298-.347.446-.52.149-.174.198-.298.298-.497.099-.198.05-.371-.025-.52-.075-.149-.669-1.612-.916-2.207-.242-.579-.487-.5-.669-.51-.173-.008-.371-.01-.57-.01-.198 0-.52.074-.792.372-.272.297-1.04 1.016-1.04 2.479 0 1.462 1.065 2.875 1.213 3.074.149.198 2.096 3.2 5.077 4.487.709.306 1.262.489 1.694.625.712.227 1.36.195 1.871.118.571-.085 1.758-.719 2.006-1.413.248-.694.248-1.289.173-1.413-.074-.124-.272-.198-.57-.347m-5.421 7.403h-.004a9.87 9.87 0 01-5.031-1.378l-.361-.214-3.741.982.998-3.648-.235-.374a9.86 9.86 0 01-1.51-5.26c.001-5.45 4.436-9.884 9.888-9.884 2.64 0 5.122 1.03 6.988 2.898a9.825 9.825 0 012.893 6.994c-.003 5.45-4.437 9.884-9.885 9.884m8.413-18.297A11.815 11.815 0 0012.05 0C5.495 0 .16 5.335.157 11.892c0 2.096.547 4.142 1.588 5.945L.057 24l6.305-1.654a11.882 11.882 0 005.683 1.448h.005c6.554 0 11.89-5.335 11.893-11.893a11.821 11.821 0 00-3.48-8.413z"/></svg>
+          </button>
+        </div>
+        <div id="primer-list" class="pecas-list"></div>
+        <div id="primer-empty" class="empty-state hidden">
+          <p>Nenhuma peça na pintura.</p>
+          <p class="empty-hint">Peças liberadas na Logística aparecem aqui após concluir a etapa.</p>
+        </div>
+      </section>
+
+      <!-- ====== HISTÓRICO ====== -->
+      <section id="view-historico" class="view">
+        <div class="tab-head">
+          <h2>Histórico</h2>
+          <p>Peças finalizadas e entregues, ciclo encerrado.</p>
+        </div>
+
+        <div class="whats-export">
+          <button class="whats-btn" onclick="openExportPicker('historico')" aria-label="Exportar para WhatsApp">
+            <svg viewBox="0 0 24 24" fill="currentColor"><path d="M17.472 14.382c-.297-.149-1.758-.867-2.03-.967-.273-.099-.471-.148-.67.15-.197.297-.767.966-.94 1.164-.173.199-.347.223-.644.075-.297-.15-1.255-.463-2.39-1.475-.883-.788-1.48-1.761-1.653-2.059-.173-.297-.018-.458.13-.606.134-.133.298-.347.446-.52.149-.174.198-.298.298-.497.099-.198.05-.371-.025-.52-.075-.149-.669-1.612-.916-2.207-.242-.579-.487-.5-.669-.51-.173-.008-.371-.01-.57-.01-.198 0-.52.074-.792.372-.272.297-1.04 1.016-1.04 2.479 0 1.462 1.065 2.875 1.213 3.074.149.198 2.096 3.2 5.077 4.487.709.306 1.262.489 1.694.625.712.227 1.36.195 1.871.118.571-.085 1.758-.719 2.006-1.413.248-.694.248-1.289.173-1.413-.074-.124-.272-.198-.57-.347m-5.421 7.403h-.004a9.87 9.87 0 01-5.031-1.378l-.361-.214-3.741.982.998-3.648-.235-.374a9.86 9.86 0 01-1.51-5.26c.001-5.45 4.436-9.884 9.888-9.884 2.64 0 5.122 1.03 6.988 2.898a9.825 9.825 0 012.893 6.994c-.003 5.45-4.437 9.884-9.885 9.884m8.413-18.297A11.815 11.815 0 0012.05 0C5.495 0 .16 5.335.157 11.892c0 2.096.547 4.142 1.588 5.945L.057 24l6.305-1.654a11.882 11.882 0 005.683 1.448h.005c6.554 0 11.89-5.335 11.893-11.893a11.821 11.821 0 00-3.48-8.413z"/></svg>
+          </button>
+        </div>
+
+        <div class="form-card week-selector">
+          <label class="field">
+            <span>Dia</span>
+            <input type="date" id="h-date">
+          </label>
+        </div>
+
+        <div class="stat full-stat">
+          <span class="stat-value ok" id="hist-total">0</span>
+          <span class="stat-label" id="hist-label">Peças finalizadas no dia</span>
+        </div>
+        <div id="hist-list" class="pecas-list"></div>
+        <div id="hist-empty" class="empty-state hidden">
+          <p>Nenhuma peça finalizada neste dia.</p>
+        </div>
+      </section>
+
+      <!-- ====== INSUMOS ====== -->
+      <section id="view-insumos" class="view">
+        <div class="tab-head">
+          <h2>Cadastro de Insumos</h2>
+          <p>Consumo contabilizado por semana (Segunda a Domingo).</p>
+        </div>
+
+        <div class="whats-export">
+          <button class="whats-btn" onclick="openExportPicker('insumos')" aria-label="Exportar para WhatsApp">
+            <svg viewBox="0 0 24 24" fill="currentColor"><path d="M17.472 14.382c-.297-.149-1.758-.867-2.03-.967-.273-.099-.471-.148-.67.15-.197.297-.767.966-.94 1.164-.173.199-.347.223-.644.075-.297-.15-1.255-.463-2.39-1.475-.883-.788-1.48-1.761-1.653-2.059-.173-.297-.018-.458.13-.606.134-.133.298-.347.446-.52.149-.174.198-.298.298-.497.099-.198.05-.371-.025-.52-.075-.149-.669-1.612-.916-2.207-.242-.579-.487-.5-.669-.51-.173-.008-.371-.01-.57-.01-.198 0-.52.074-.792.372-.272.297-1.04 1.016-1.04 2.479 0 1.462 1.065 2.875 1.213 3.074.149.198 2.096 3.2 5.077 4.487.709.306 1.262.489 1.694.625.712.227 1.36.195 1.871.118.571-.085 1.758-.719 2.006-1.413.248-.694.248-1.289.173-1.413-.074-.124-.272-.198-.57-.347m-5.421 7.403h-.004a9.87 9.87 0 01-5.031-1.378l-.361-.214-3.741.982.998-3.648-.235-.374a9.86 9.86 0 01-1.51-5.26c.001-5.45 4.436-9.884 9.888-9.884 2.64 0 5.122 1.03 6.988 2.898a9.825 9.825 0 012.893 6.994c-.003 5.45-4.437 9.884-9.885 9.884m8.413-18.297A11.815 11.815 0 0012.05 0C5.495 0 .16 5.335.157 11.892c0 2.096.547 4.142 1.588 5.945L.057 24l6.305-1.654a11.882 11.882 0 005.683 1.448h.005c6.554 0 11.89-5.335 11.893-11.893a11.821 11.821 0 00-3.48-8.413z"/></svg>
+          </button>
+        </div>
+
+        <div class="form-card week-selector">
+          <label class="field">
+            <span>Semana</span>
+            <select id="i-week"></select>
+          </label>
+        </div>
+
+        <div class="form-card">
+          <h2>Lançar Insumo</h2>
+
+          <label class="field">
+            <span>Data</span>
+            <input type="date" id="i-data">
+          </label>
+
+          <label class="field">
+            <span>Tipo do Insumo</span>
+            <button type="button" id="i-tipo-toggle" class="sel-toggle">Escolher tipo</button>
+            <div id="i-tipo-picker" class="picker hidden">
+              <div id="i-tipo-chips" class="chip-row"></div>
+            </div>
+          </label>
+
+          <label class="field">
+            <span>Quantidade</span>
+            <div class="qty-control">
+              <button type="button" class="mini-btn" onclick="decQtd('i-qtd')">−</button>
+              <input type="number" id="i-qtd" min="1" placeholder="0" inputmode="numeric" readonly>
+              <button type="button" class="mini-btn" onclick="incQtd('i-qtd')">+</button>
+            </div>
+          </label>
+
+          <button class="primary-btn full" onclick="saveInsumo()">Lançar insumo</button>
+        </div>
+
+        <div class="summary insumo-resumo" id="insumo-resumo"></div>
+
+        <div class="tab-head">
+          <h2>Lançamentos</h2>
+        </div>
+        <div id="insumo-list" class="pecas-list"></div>
+        <div id="insumo-empty" class="empty-state hidden">
+          <p>Nenhum lançamento de insumo ainda.</p>
+        </div>
+      </section>
+
+      <!-- ====== RETORNO ====== -->
+      <section id="view-retorno" class="view">
+        <div class="tab-head">
+          <h2>Retorno de Peças</h2>
+          <p>Registre peças que retornaram à pintura. Não contam como produção.</p>
+        </div>
+
+        <div class="form-card" id="retorno-form">
+          <h2>Lançar Retorno</h2>
+
+          <label class="field">
+            <span>Data</span>
+            <input type="date" id="r-data">
+          </label>
+
+          <label class="field">
+            <span>Nome da Peça</span>
+            <button type="button" id="r-name-toggle" class="sel-toggle">Escolher nome</button>
+            <div id="r-name-picker" class="picker hidden">
+              <input type="search" id="r-name-search" class="search-input" placeholder="Buscar nome...">
+              <div id="r-name-chips" class="chip-row"></div>
+            </div>
+          </label>
+
+          <label class="field">
+            <span>Quantidade</span>
+            <div class="qty-control">
+              <button type="button" class="mini-btn" onclick="decQtd('r-qtd')">−</button>
+              <input type="number" id="r-qtd" min="1" placeholder="0" inputmode="numeric" readonly>
+              <button type="button" class="mini-btn" onclick="incQtd('r-qtd')">+</button>
+            </div>
+          </label>
+
+          <label class="field">
+            <span>Observações</span>
+            <textarea id="r-obs" rows="2" placeholder="Opcional"></textarea>
+          </label>
+
+          <button class="primary-btn full" onclick="saveRetorno()">Lançar retorno</button>
+        </div>
+
+        <div class="tab-head">
+          <h2>Lançamentos</h2>
+        </div>
+        <div id="retorno-list" class="pecas-list"></div>
+        <div id="retorno-empty" class="empty-state hidden">
+          <p>Nenhum retorno lançado ainda.</p>
+        </div>
+      </section>
+
+      <!-- ====== DETALHE ====== -->
+      <section id="view-detail" class="view">
+        <button class="back-btn" onclick="goDashboard()">← Voltar</button>
+
+        <div class="detail-card">
+          <div class="detail-head">
+            <span class="badge" id="detail-badge">Programação</span>
+            <h2 id="detail-pn">—</h2>
+            <p id="detail-name">—</p>
+          </div>
+
+          <div id="detail-rename" class="rename-box hidden">
+            <label class="field">
+              <span>Part Number (PN)</span>
+              <button type="button" id="rn-pn-toggle" class="sel-toggle">Escolher PN</button>
+              <div id="rn-pn-picker" class="picker hidden">
+                <input type="search" id="rn-pn-search" class="search-input" placeholder="Buscar PN...">
+                <div id="rn-pn-chips" class="chip-row"></div>
+              </div>
+            </label>
+            <label class="field">
+              <span>Nome da Peça</span>
+              <button type="button" id="rn-name-toggle" class="sel-toggle">Escolher nome</button>
+              <div id="rn-name-picker" class="picker hidden">
+                <input type="search" id="rn-name-search" class="search-input" placeholder="Buscar nome...">
+                <div id="rn-name-chips" class="chip-row"></div>
+              </div>
+            </label>
+            <div class="rename-actions">
+              <button class="primary-btn" onclick="saveRename()">Salvar</button>
+              <button class="danger-btn" onclick="cancelRename()">Cancelar</button>
+            </div>
+          </div>
+
+          <div class="info-grid">
+            <div class="info-item">
+              <span class="info-label">Programação</span>
+              <span class="info-value" id="detail-meta">—</span>
+            </div>
+            <div class="info-item" id="detail-compensado-item">
+              <span class="info-label">Saldo extra aplicado</span>
+              <span class="info-value" id="detail-compensado">—</span>
+            </div>
+            <div class="info-item">
+              <span class="info-label">Data de Entrada</span>
+              <span class="info-value" id="detail-data">—</span>
+            </div>
+            <div class="info-item">
+              <span class="info-label">Cor</span>
+              <span class="info-value" id="detail-cor">—</span>
+            </div>
+            <div class="info-item" id="detail-liberadas-item">
+              <span class="info-label">Liberadas (Logística)</span>
+              <span class="info-value" id="detail-liberadas">—</span>
+            </div>
+            <div class="info-item" id="detail-recebidas-item">
+              <span class="info-label">Entregas Confirmadas</span>
+              <span class="info-value" id="detail-recebidas">—</span>
+            </div>
+            <div class="info-item">
+              <span class="info-label">Pintadas</span>
+              <span class="info-value" id="detail-pintadas">—</span>
+            </div>
+            <div class="info-item full" id="detail-obs-wrap">
+              <span class="info-label">Observações</span>
+              <span class="info-value" id="detail-obs">—</span>
+            </div>
+          </div>
+
+          <div class="stepper" id="stepper"></div>
+
+          <div class="progress-block">
+            <span class="info-label">Progresso</span>
+            <div class="progress-track"><div class="progress-fill" id="progress-fill"></div></div>
+          </div>
+
+          <button class="primary-btn" id="concluir-btn" onclick="concluirPrimer(currentId)">Concluir peça</button>
+          <button class="danger-btn" id="rename-btn" onclick="openRename()">Alterar PN / Nome</button>
+          <button class="danger-btn" id="edit-btn" onclick="openEdit()">Editar dados</button>
+          <button class="danger-btn" id="delete-btn" onclick="confirmDelete()">Excluir peça</button>
+        </div>
+      </section>
+
+      <!-- ====== CADASTRO ====== -->
+      <section id="view-form" class="view">
+        <button class="back-btn" onclick="goDashboard()">← Voltar</button>
+
+        <div class="form-card">
+          <h2 id="form-title">Lançar Programação</h2>
+
+          <label class="field">
+            <span>Part Number (PN)</span>
+            <button type="button" id="f-pn-toggle" class="sel-toggle">Escolher PN</button>
+            <div id="f-pn-picker" class="picker hidden">
+              <input type="search" id="f-pn-search" class="search-input" placeholder="Buscar PN...">
+              <div id="f-pn-chips" class="chip-row"></div>
+            </div>
+          </label>
+
+          <label class="field">
+            <span>Nome da Peça</span>
+            <button type="button" id="f-name-toggle" class="sel-toggle">Escolher nome</button>
+            <div id="f-name-picker" class="picker hidden">
+              <input type="search" id="f-name-search" class="search-input" placeholder="Buscar nome...">
+              <div id="f-name-chips" class="chip-row"></div>
+            </div>
+          </label>
+
+          <label class="field">
+            <span>Cor</span>
+            <button type="button" id="f-cor-toggle" class="sel-toggle">Escolher cor</button>
+            <div id="f-cor-picker" class="picker hidden">
+              <input type="search" id="f-cor-search" class="search-input" placeholder="Buscar cor...">
+              <div id="f-cor-chips" class="chip-row"></div>
+            </div>
+          </label>
+
+          <label class="field hidden" id="f-verniz-field">
+            <span>Verniz</span>
+            <button type="button" id="f-verniz-toggle" class="sel-toggle">Escolher verniz</button>
+            <div id="f-verniz-picker" class="picker hidden">
+              <div id="f-verniz-chips" class="chip-row"></div>
+            </div>
+          </label>
+
+          <label class="field">
+            <span>Programação (deixe 0 = programação livre)</span>
+            <div class="qty-control">
+              <button type="button" class="mini-btn" onclick="decQtd('f-meta')">−</button>
+              <input type="number" id="f-meta" placeholder="0" min="0" inputmode="numeric" readonly>
+              <button type="button" class="mini-btn" onclick="incQtd('f-meta')">+</button>
+            </div>
+          </label>
+
+          <label class="field">
+            <span>Saldo extra</span>
+            <button type="button" class="toggle-btn" id="f-extra-btn" onclick="toggleFormExtra()">Saldo Extra desativado</button>
+            <p class="field-hint" id="f-extra-hint"></p>
+          </label>
+
+          <label class="field">
+            <span>Data de Entrada</span>
+            <input type="date" id="f-date">
+          </label>
+
+          <label class="field">
+            <span>Observações</span>
+            <textarea id="f-obs" rows="2" placeholder="Opcional"></textarea>
+          </label>
+
+          <button class="primary-btn full" id="form-submit" onclick="savePart()">Salvar peça</button>
+          <button class="secondary-btn full" id="form-pre" onclick="savePartPre()">Pré-cadastrar (somente PN e Nome)</button>
+          <p class="field-hint">O pré-cadastro cria apenas o registro no banco; os demais dados podem ser preenchidos depois em "Editar dados".</p>
+        </div>
+      </section>
+
+    </main>
+
+    <!-- ====== MENU INFERIOR ====== -->
+    <nav class="nav" id="bottom-nav">
+      <div class="nav-bar">
+        <button type="button" class="nav-fab" onclick="openFabMenu()" aria-label="Lançar">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round"><path d="M12 5v14M5 12h14"/></svg>
+        </button>
+
+        <button type="button" class="nav-btn active" data-view="view-dashboard" onclick="goDashboard()">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M3 3v18h18"/><rect x="7" y="10" width="3" height="8" rx="1"/><rect x="13" y="6" width="3" height="12" rx="1"/></svg>
+          <span>Dashboard</span>
+        </button>
+
+        <button class="nav-btn" data-view="view-primer" onclick="showTab('view-primer', this)">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M9.06 11.9l8.07-8.06a2.85 2.85 0 1 1 4.03 4.03l-8.06 8.08"/><path d="M7.07 14.94c-1.66 0-3 1.35-3 3.02 0 1.33-2.5 1.52-2 2.02 1.08 1.1 2.49 2.02 4 2.02 2.2 0 4-1.8 4-4.04a3.01 3.01 0 0 0-3-3.02z"/></svg>
+          <span>Pintura</span>
+        </button>
+
+        <button class="nav-btn" data-view="view-historico" onclick="showTab('view-historico', this)">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="9"/><path d="M12 7v5l3 3"/></svg>
+          <span>Histórico</span>
+        </button>
+
+        <button class="nav-btn" data-view="view-insumos" onclick="showTab('view-insumos', this)">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 8l-9-5-9 5v8l9 5 9-5V8z"/><path d="M3 8l9 5 9-5"/><path d="M12 13v8"/></svg>
+          <span>Insumos</span>
+        </button>
+      </div>
+    </nav>
+
+    <div id="fab-menu" class="fab-menu hidden" onclick="closeFabMenu()">
+      <div class="fab-menu-pop" onclick="event.stopPropagation()">
+        <button class="fab-menu-item" onclick="closeFabMenu(); openForm()">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="M12 5v14M5 12h14"/></svg>
+          <span>Lançar Programação</span>
+        </button>
+        <button class="fab-menu-item" onclick="closeFabMenu(); goRetorno()">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M3 12a9 9 0 1 0 9-9 9.75 9.75 0 0 0-6.74 2.74L3 8"/><path d="M3 3v5h5"/></svg>
+          <span>Lançar Retorno</span>
+        </button>
+      </div>
+    </div>
+
+    <div id="export-picker" class="picker-overlay hidden" onclick="closeExportPicker()">
+      <div class="picker-sheet" onclick="event.stopPropagation()">
+        <div class="picker-title">Exportar para WhatsApp</div>
+        <div id="export-picker-list"></div>
+        <button class="picker-cancel" onclick="closeExportPicker()">Cancelar</button>
+      </div>
+    </div>
+
+    <div id="toast" class="toast hidden"></div>
+  </div>
+
+  <script src="js/app.js"></script>
+  <script>
+    if ("serviceWorker" in navigator) {
+      window.addEventListener("load", () => {
+        navigator.serviceWorker.register("sw.js").catch(() => {});
+      });
+    }
+  </script>
+</body>
+</html>
