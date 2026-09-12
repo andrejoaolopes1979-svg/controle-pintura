@@ -1,6 +1,6 @@
 "use strict";
 
-const CACHE = "controle-pintura-v9";
+const CACHE = "controle-pintura-v10";
 
 self.addEventListener("install", (e) => {
   e.waitUntil(
